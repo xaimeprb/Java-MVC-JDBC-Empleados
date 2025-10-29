@@ -3,6 +3,8 @@ package controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.EmpleadoDAO;
@@ -22,6 +24,16 @@ public class QuerysController {
         
         this.vista = vista;
         this.dao = dao;
+        
+        try {
+            
+        onInsertList();
+    
+        } catch (SQLException e) {
+            
+        JOptionPane.showMessageDialog(vista, "Error al cargar listas: " + e.getMessage(), "Error de BD", JOptionPane.ERROR_MESSAGE);
+    
+        }
         
         this.vista.getBtnBuscar().addActionListener(new ActionListener() {
             
@@ -70,6 +82,30 @@ public class QuerysController {
             JOptionPane.showMessageDialog(vista, "Error al buscar empleados: " + ex.getMessage(), "Error de BD", JOptionPane.ERROR_MESSAGE);
             
         }
+    }
+    
+    private void onInsertList() throws SQLException {
+        
+        DefaultListModel<String> modeloLocalidades = new DefaultListModel<>();
+        
+        for(String localidad : dao.busquedaLocalidades()) {
+            
+            modeloLocalidades.addElement(localidad);
+            
+        }
+        
+        vista.getListLocalidades().setModel(modeloLocalidades);
+        
+        DefaultListModel<String> modeloOficios = new DefaultListModel<>();
+        
+        for(String oficio : dao.busquedaOficios()) {
+            
+            modeloOficios.addElement(oficio);
+            
+        }
+        
+        vista.getListOficios().setModel(modeloOficios);
+        
     }
     
 }

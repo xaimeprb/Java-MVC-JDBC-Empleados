@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,56 @@ public class EmpleadoDAO {
         
         return empleados;
 
+    }
+    
+    public List<String> busquedaLocalidades() throws SQLException {
+        
+        List<String> localidades = new ArrayList<>();
+        
+        String queryLocalidades = """
+                                  SELECT d.loc
+                                  FROM departamentos d;
+                                  """;
+        
+        Connection con = JDBCSingleton.getInstance().getConnection();
+        
+        try(Statement st = con.createStatement(); ResultSet rs = st.executeQuery(queryLocalidades)) {
+            
+            while(rs.next()) {
+                
+                localidades.add(rs.getString("loc"));
+                
+            }
+            
+        }
+        
+        return localidades;
+        
+    }
+    
+    public List<String> busquedaOficios() throws SQLException {
+        
+        List<String> oficios = new ArrayList<>();
+        
+        String queryOficios = """
+                              SELECT DISTINCT e.oficio
+                              FROM empleados e;
+                              """;
+        
+        Connection con = JDBCSingleton.getInstance().getConnection();
+        
+        try(Statement st = con.createStatement(); ResultSet rs = st.executeQuery(queryOficios)) {
+            
+            while(rs.next()) {
+                
+                oficios.add(rs.getString("oficio"));
+                
+            }
+            
+        }
+        
+        return oficios;
+        
     }
     
 }
